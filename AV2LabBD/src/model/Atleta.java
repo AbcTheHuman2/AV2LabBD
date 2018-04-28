@@ -1,4 +1,4 @@
-package view;
+package model;
 
 public class Atleta {
 
@@ -33,6 +33,7 @@ public class Atleta {
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
+		sb.append(getNome());
 		return sb.toString();
 	}
 }
