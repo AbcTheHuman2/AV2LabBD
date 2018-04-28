@@ -20,7 +20,7 @@ public class AtletaDAOImpl implements AtletaDAO {
 		try {
 			Context initCtx = new InitialContext();
 			Context envCtx = (Context) initCtx.lookup("java:comp/env");
-			DataSource ds = (DataSource) envCtx.lookup("jdbc/DB");
+			DataSource ds = (DataSource) envCtx.lookup("jdbc/Atletismo");
 			return ds.getConnection();
 		} catch (NamingException e) {
 			e.printStackTrace();
