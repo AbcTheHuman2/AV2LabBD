@@ -32,16 +32,17 @@
 		<% 	session.setAttribute("MESSAGE", null);
 			} %>
 		<hr/>
-		<p>Nome: <input style="width: 305px; "/></p>
+		<p>Nome: <input style="width: 283px; "/></p>
 		<p>Sexo: <select style="width: 109px; ">
 		<option value="masc">Masculino</option>
 		<option value="femi">Feminino</option>
 		</select></p>
-		<p>País: <select style="width: 111px; ">
+		<p>País: <select style="width: 150px; ">
 
 		</select></p>
 		<form>
-			<input type="submit" value="Cadastrar Atleta"/>
-		</form>
+			<input type="submit" value="Cadastrar Atleta"/><input type="submit"
+			value="Lista de Atletas"/>
+	</form>
 	</body>
 </html>
