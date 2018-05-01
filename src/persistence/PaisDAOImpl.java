@@ -34,9 +34,11 @@ public class PaisDAOImpl implements PaisDAO {
 		Statement stmt = c.createStatement();
 		ResultSet rs = stmt.executeQuery("");
 		while (rs.next()) {
-			
+			Pais p = new Pais();
+			p.setNome(rs.getString(2));
+			paises.add(p);
 		}
-		return null;
+		return paises;
 	}
 
 }
