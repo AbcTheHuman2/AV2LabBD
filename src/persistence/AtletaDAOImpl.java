@@ -15,7 +15,22 @@ import javax.sql.DataSource;
 import model.Atleta;
 
 public class AtletaDAOImpl implements AtletaDAO {
-
+	
+	/*private Connection c;
+	
+	public AtletaDAOImpl() {
+		
+		GenericDAO gDAO = new GenericDAO();
+		
+		try {
+			c = gDAO.getConnection();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}*/
+	
 	private Connection getConnection() {
 		try {
 			Context initCtx = new InitialContext();

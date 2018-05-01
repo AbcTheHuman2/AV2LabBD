@@ -11,14 +11,31 @@ import java.util.List;
 import model.Pais;
 
 public class PaisDAOImpl implements PaisDAO {
-
+	
+	private Connection c;
+	
+	public PaisDAOImpl() {
+		
+		GenericDAO gDAO = new GenericDAO();
+		
+		try {
+			c = gDAO.getConnection();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public List<Pais> prepararDropdown() throws SQLException {
 		
-		List<Pais> paises = new ArrayList<Pais>();
-		
-		
-		
+		List<Pais> paises = new ArrayList<Pais>();	
+		Statement stmt = c.createStatement();
+		ResultSet rs = stmt.executeQuery("");
+		while (rs.next()) {
+			
+		}
 		return null;
 	}
 
