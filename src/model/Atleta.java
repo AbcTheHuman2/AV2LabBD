@@ -5,6 +5,7 @@ public class Atleta {
 	private int cod;
 	private String nome;
 	private boolean sexo;
+	private Pais paisOrigem;
 	
 	public int getCod() {
 		return cod;
@@ -30,10 +31,11 @@ public class Atleta {
 		this.sexo = sexo;
 	}
 	
-	@Override
-	public String toString() {
-		StringBuffer sb = new StringBuffer();
-		sb.append(getNome());
-		return sb.toString();
+	public Pais getPais() {
+		return paisOrigem;
+	}
+	
+	public void setPais(Pais paisOrigem) {
+		this.paisOrigem = paisOrigem;
 	}
 }

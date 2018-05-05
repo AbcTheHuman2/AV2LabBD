@@ -1,29 +1,27 @@
 package model;
 
-public class Pais {
-	
-	private int cod;
+public class Pais
+{
+	private char[] codigo = new char[3];
 	private String nome;
 	
-	public int getCod() {
-		return cod;
+	public char[] getCodigo()
+	{
+		return codigo;
 	}
 	
-	public void setCod(int cod) {
-		this.cod = cod;
+	public void setCodigo(char[] codigo)
+	{
+		this.codigo = codigo;
 	}
 	
-	public String getNome() {
+	public String getNome()
+	{
 		return nome;
 	}
 	
-	public void setNome(String nome) {
+	public void setNome(String nome)
+	{
 		this.nome = nome;
-	}
-	
-	@Override
-	public String toString() {
-		StringBuffer sb = new StringBuffer();
-		return sb.toString();
 	}
 }
