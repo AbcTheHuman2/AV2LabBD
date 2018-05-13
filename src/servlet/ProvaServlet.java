@@ -32,7 +32,7 @@ public class ProvaServlet extends HttpServlet
 	{
 		try {
 			//TODO: Move database creation and data to web.xml
-			dbManager = new DBConnectionManager("jdbc:jtds:sqlserver://localhost:1433;", "databaseName=Olimpiadas;", "user=Gabriel;", "password=sqldbpass;");
+			dbManager = new DBConnectionManager("jdbc:jtds:sqlserver://localhost:1433;", "databaseName=Atletismo;", "user=Gabriel;", "password=sqldbpass;");
 			provaDAO = new ProvaDAO(dbManager);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();

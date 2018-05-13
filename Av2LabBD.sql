@@ -147,3 +147,64 @@ VALUES
 ('FIN', 'Finlândia'),
 ('FRA', 'França'),
 ('FSM', 'Estados Federados da Micronésia')
+
+create trigger t_verificarDesempenhoSalto
+on Atleta_Bateria
+for insert
+as
+begin
+    declare @desempenho_maior numeric(9),
+            @des_1 numeric(9),
+            @des_2 numeric(9),
+            @des_3 numeric(9),
+            @des_4 numeric(9),
+            @des_5 numeric(9),
+            @des_6 numeric(9)
+    set @desempenho_maior = 0
+    set @des_1 = (select desempenho from inserted)
+    set @des_2 = (select desempenho_2 from inserted)
+    set @des_3 = (select desempenho_3 from inserted)
+    set @des_4 = (select desempenho_4 from inserted)
+    set @des_5 = (select desempenho_5 from inserted)
+    set @des_6 = (select desempenho_6 from inserted)
+    if (@des_1 > @desempenho_maior)
+    begin
+        set @desempenho_maior = @des_1
+    end
+    if (@des_2 > @desempenho_maior)
+    begin
+        set @desempenho_maior = @des_2
+    end
+    if (@des_3 > @desempenho_maior)
+    begin
+        set @desempenho_maior = @des_3
+    end
+    if (@des_4 > @desempenho_maior)
+    begin
+        set @desempenho_maior = @des_4
+    end
+    if (@des_5 > @desempenho_maior)
+    begin
+        set @desempenho_maior = @des_5
+    end
+    if (@des_6 > @desempenho_maior)
+    begin
+        set @desempenho_maior = @des_6
+    end
+end
+
+create trigger t_verificapais
+on Pais
+after delete
+as begin
+	rollback transaction
+	raiserror('Não é possível excluir País', 16,1)
+end
+
+create trigger t_verificaatleta
+on Atleta
+after delete
+as begin
+	rollback transaction
+	raiserror('Não é possível excluir Atleta', 16,1)
+end
