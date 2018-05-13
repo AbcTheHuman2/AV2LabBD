@@ -26,7 +26,7 @@ public class Prova
 		this.nome = nome;
 	}
 	
-	public boolean getMasculino()
+	public boolean isMasculino()
 	{
 		return masculino;
 	}
