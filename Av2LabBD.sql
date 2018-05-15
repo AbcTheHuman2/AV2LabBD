@@ -5,8 +5,8 @@ USE Atletismo
 CREATE TABLE Atleta (
     codigo int identity(1,1) not null,
     nome varchar(255),
-    sexo bit,
-    pais_codigo char(3),
+    masculino bit not null,
+    pais_codigo char(3) not null,
     primary key (codigo),
     foreign key (pais_codigo) references Pais(codigo)
 )
@@ -148,7 +148,23 @@ VALUES
 ('FRA', 'França'),
 ('FSM', 'Estados Federados da Micronésia')
 
-create trigger t_verificarDesempenhoSalto
+create trigger t_verificarDesCorrida
+on Atleta_Bateria
+for insert
+as
+begin
+	declare @desempenho_maior numeric(9),
+			@desempenho numeric(9)
+	set @desempenho_maior = 0
+	set @desempenho = (select desempenho from inserted)
+    if (@desempenho > @desempenho_maior)
+    begin
+        set @desempenho_maior = @desempenho
+    end
+    select * from Recorde where prova_id = @prova_id AND mundial = 1
+end
+
+create trigger t_verificarDesSalto
 on Atleta_Bateria
 for insert
 as
@@ -191,6 +207,7 @@ begin
     begin
         set @desempenho_maior = @des_6
     end
+    select * from Recorde where prova_id = @prova_id AND mundial = 1
 end
 
 create trigger t_verificapais
@@ -207,4 +224,45 @@ after delete
 as begin
 	rollback transaction
 	raiserror('Não é possível excluir Atleta', 16,1)
+end
+
+INSERT INTO Pais
+VALUES
+('ARG', 'Argentina'),
+('BRA', 'Brasil'),
+('CAN', 'Canadá'),
+('CHN', 'China'),
+('ESP', 'Espanha'),
+('FRA', 'França')
+
+INSERT INTO Atleta (nome, masculino, pais_codigo)
+VALUES
+('Joseph', 1, 'CAN'),
+('August', 1, 'ARG'),
+('Natalie', 0, 'ARG'),
+('Nassier', 1, 'FRA'),
+('Yang', 0, 'CHN'),
+('Wan', 1, 'CHN'),
+('Karrina', 0, 'ESP'),
+('Maria', 0, 'BRA'),
+('Julio', 1, 'BRA'),
+('Yuli', 0, 'CAN'),
+('Brutus', 1, 'ESP'),
+('Leticia', 0, 'FRA')
+
+create function fn_resultadosAtletas(@prova_codigo int)
+returns
+@prova_resultados table (
+    atleta_nome varchar(255),
+    pais_nome varchar(255),
+    desempenho numeric(9)
+)
+as
+begin
+    insert into @prova_resultados (atleta_nome)
+    select nome from Atleta
+    update @prova_resultados
+    set pais_nome from Pais
+    update @prova_resultados
+    set desempenho from Atleta_Bateria
 end
