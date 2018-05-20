@@ -132,6 +132,15 @@ AS
 BEGIN
 	--Uma bateria suporta até 8 atletas, ao inserir um desempenho precisamos verificar se a bateria já possui 8,
 	--caso sim, o id da bateria incrementa aqui... como?
+	declare @atleta_codigo int,
+			@bateria_id int
+	set @atleta_codigo = (select atleta_codigo from Atleta_Bateria where bateria_id = )
+	set @bateria_id = (select id from Bateria)
+	if (COUNT(@atleta_codigo) = 8)
+	begin
+		insert into Atleta_Bateria(bateria_id)
+		values(@atleta_codigo)
+	end
 END
 GO
 
@@ -150,6 +159,7 @@ BEGIN
 		INNER JOIN Atleta ON Pais.codigo = Atleta.pais_codigo
 		INNER JOIN Atleta_Bateria ON Atleta.codigo = Atleta_Bateria.atleta_codigo
 	)
+	return
 END
 GO
 
