@@ -5,10 +5,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Novo desempenho</title>
+<title>Resultados das Provas</title>
 </head>
 <body>
-
 	<h1>Selecione a prova</h1>
 	
 	<select name="provaSelecionada"> 
@@ -16,21 +15,14 @@
 			<option value="${prova.getId()}">${prova.getNome()}</option> 
 		</c:forEach>
 	</select>
-	<p>prova.getSexo()</p>
-	<h1>Selecione o atleta</h1>
-	<select name="atletaSelecionado"> 
-		<c:forEach items="${atletas}" var="atleta"> 
-			<option value="${atleta.getCodigo()}">${atleta.getNome()}</option> 
-		</c:forEach>
-	</select>
 	
-	Desempenho:
-	<input type="number" name="desempenho" maxlength=9>
+	<table border="1">
+	<c:forEach items="${resultados}" var="resultado">
+	    <tr>
+	        <td>${resultado.getNome()}</td>
+	    </tr>
+	</c:forEach>
+	</table>
 	
-	<input type="number" name="desempenho" maxlength=9>
-	<input type="number" name="desempenho" maxlength=9>
-	<input type="number" name="desempenho" maxlength=9>
-	<input type="number" name="desempenho" maxlength=9>
-	<input type="number" name="desempenho" maxlength=9>
 </body>
 </html>

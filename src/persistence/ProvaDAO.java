@@ -13,32 +13,33 @@ public class ProvaDAO
 {
 	DBConnectionManager dbManager;
 	
-	public ProvaDAO(DBConnectionManager dbManager)
+	public ProvaDAO()
 	{
-		this.dbManager = dbManager;
+		try
+		{
+			dbManager = DBConnectionManager.getInstance();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	public List<Prova> selectAll() throws SQLException
 	{
 		List<Prova> provas = new ArrayList<Prova>();
-		
-		try
-		(
-			Connection connection = dbManager.getConnection();
-			PreparedStatement statement = connection.prepareStatement("SELECT id, nome, masculino FROM Prova");
-			ResultSet resultSet = statement.executeQuery();
-		) {
-			while(resultSet.next())
-			{
-				Prova p = new Prova();
-				p.setId(resultSet.getInt("id"));
-				p.setNome(resultSet.getString("nome"));
-				p.setMasculino(resultSet.getBoolean("masculino"));
-				provas.add(p);
-			}
-			resultSet.close();
-			statement.close();
+		Connection connection = dbManager.getConnection();
+		PreparedStatement statement = connection.prepareStatement("SELECT * FROM Prova");
+		ResultSet resultSet = statement.executeQuery();
+		while(resultSet.next())
+		{
+			Prova p = new Prova();
+			p.setId(resultSet.getInt("id"));
+			p.setNome(resultSet.getString("nome"));
+			p.setSexo(resultSet.getBoolean("sexo"));
+			provas.add(p);
 		}
+		resultSet.close();
+		statement.close();
 		return provas;
 	}
 }

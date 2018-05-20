@@ -6,15 +6,24 @@ import java.sql.SQLException;
 
 public class DBConnectionManager
 {
+	private static DBConnectionManager instance;
 	private Connection connection;
+	//TODO: Is it possible to improve this?
+	String dbURL = "jdbc:jtds:sqlserver://localhost:1433;";
+	String database = "databaseName=Olimpiadas;";
+	String user = "user=Gabriel;";
+	String pwd = "password=sqldbpass;";
 	
-	public DBConnectionManager(String dbURL, String database, String user, String pwd) throws ClassNotFoundException, SQLException
+	private DBConnectionManager() throws SQLException
 	{
-		Class.forName("net.sourceforge.jtds.jdbc.Driver");
-		
-		String url = dbURL + database + user + pwd;
-		
-		connection = DriverManager.getConnection(url);
+		try
+		{
+			Class.forName("net.sourceforge.jtds.jdbc.Driver");
+			connection = DriverManager.getConnection(dbURL + database + user + pwd);
+		} catch (ClassNotFoundException e)
+		{
+			System.out.println("Database connection creation failed: ");
+		}
 	}
 	
 	public Connection getConnection()
@@ -22,18 +31,11 @@ public class DBConnectionManager
 		return connection;
 	}
 	
-	public void closeConnection()
+	public static DBConnectionManager getInstance() throws SQLException
 	{
-		try
-		{
-			if (connection != null)
-			{
-				connection.close();
-				connection = null;
-			}
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		if (instance == null || instance.getConnection().isClosed())
+			instance = new DBConnectionManager();
+		
+		return instance;
 	}
 }

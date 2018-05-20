@@ -2,17 +2,18 @@ package model;
 
 public class Atleta {
 
-	private int cod;
+	private int codigo;
 	private String nome;
 	private boolean sexo;
 	private Pais paisOrigem;
 	
-	public int getCod() {
-		return cod;
+	public int getCodigo() {
+		return codigo;
 	}
 	
-	public void setCod(int cod) {
-		this.cod = cod;
+	public void setCodigo(int codigo)
+	{
+		this.codigo = codigo;
 	}
 	
 	public String getNome() {
@@ -23,7 +24,7 @@ public class Atleta {
 		this.nome = nome;
 	}
 	
-	public boolean getSexo() {
+	public boolean isMasculino() {
 		return sexo;
 	}
 	

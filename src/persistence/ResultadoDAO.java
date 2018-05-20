@@ -9,37 +9,39 @@ import java.util.List;
 
 import model.Resultado;
 
-public class ResultadoDAO {
-	
+public class ResultadoDAO
+{
 	DBConnectionManager dbManager;
 	
-	public ResultadoDAO(DBConnectionManager dbManager) {
-		this.dbManager = dbManager;
+	public ResultadoDAO()
+	{
+		try
+		{
+			dbManager = DBConnectionManager.getInstance();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
-
-	public List<Resultado> selectAll() throws SQLException 
+	
+	public List<Resultado> selectAll(String id) throws SQLException
 	{
 		List<Resultado> resultados = new ArrayList<Resultado>();
-		
-		try 
-		(
-				Connection con = dbManager.getConnection();
-				PreparedStatement pstm = con.prepareStatement(""
-						+ "SELECT atleta_nome, pais_nome, desempenho FROM @prova_resultados");
-				ResultSet rs = pstm.executeQuery();
-		) {
-			while(rs.next())
-			{
-				Resultado r = new Resultado();
-				r.setAtletaNome(rs.getString("atleta_nome"));
-				r.setPaisNome(rs.getString("pais_nome"));
-				r.setDesempenho(rs.getFloat("desempenho"));
-				resultados.add(r);
-			}
-			rs.close();
-			pstm.close();
+		Connection connection = dbManager.getConnection();
+		PreparedStatement statement = connection.prepareStatement("SELECT * FROM fn_resultadosProva(?)");
+		statement.setString(1, id);
+		ResultSet resultSet = statement.executeQuery();
+		while(resultSet.next())
+		{
+			Resultado r = new Resultado();
+			//r.setId(resultSet.getInt("id"));
+			//r.setNome(resultSet.getString("nome"));
+			//r.setSexo(resultSet.getBoolean("masculino"));
+			resultados.add(r);
 		}
+		resultSet.close();
+		statement.close();
+		
 		return resultados;
 	}
-
 }

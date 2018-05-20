@@ -7,65 +7,41 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
-
 import model.Atleta;
-import model.Pais;
 
-public class AtletaDAO implements IAtletaDAO
+public class AtletaDAO
 {
-	private Connection con;
+	DBConnectionManager dbManager;
 	
-	public AtletaDAO() throws ClassNotFoundException, SQLException
+	public AtletaDAO()
 	{
-		GenericDAO gDAO = new GenericDAO();
-		con = gDAO.getConnection();
-	}
-	
-	@Override
-	public void insert(Atleta a) throws SQLException
-	{
-		String sql = "INSERT INTO Atleta (nome, masculino, pais_codigo) VALUES (?, ?, ?)";
-		
-		PreparedStatement ps;
-		ps = con.prepareStatement(sql);
-		
-		ps.setString(1, a.getNome());
-		ps.setBoolean(2, a.getSexo());
-		ps.setString(3, a.getPais().getCodigo().toString());
-		
-		ps.execute();
-		ps.close();
-	}
-	
-	@Override
-	public List<Atleta> searchAll(String where) throws SQLException
-	{
-		List<Atleta> listaAtletas = new ArrayList<Atleta>();
-		
-		String sql = "SELECT codigo, nome, masculino, pais_codigo FROM Atleta";
-		PreparedStatement ps = con.prepareStatement(sql);
-		ResultSet rs = ps.executeQuery();
-		while(rs.next())
+		try
 		{
-			//TODO Testar colocar fora do while
-			Atleta a = new Atleta();
-			a.setCod(rs.getInt("cod"));
-			a.setNome(rs.getString("nome"));
-			a.setSexo(rs.getBoolean("masculino"));
-			
-			/*p.setCodigo(codigo);
-			p.setNome(nome);
-			String paisSQL = "";
-			
-			a.setPais(rs.getString("pais_codigo"));*/
-			listaAtletas.add(a);
+			dbManager = DBConnectionManager.getInstance();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
 		}
-		rs.close();
-		ps.close();
-		return listaAtletas;
+	}
+	
+	public List<Atleta> selectAll() throws SQLException
+	{
+		List<Atleta> atletas = new ArrayList<Atleta>();
+		Connection connection = dbManager.getConnection();
+		
+		PreparedStatement statement = connection.prepareStatement("SELECT * FROM Atleta");
+		ResultSet resultSet = statement.executeQuery();
+		while(resultSet.next())
+		{
+			Atleta a = new Atleta();
+			a.setCodigo(resultSet.getInt("codigo"));
+			a.setNome(resultSet.getString("nome"));
+			a.setSexo(resultSet.getBoolean("sexo"));
+			//a.setPais(paisOrigem); //TODO: Arrumar na query, com innerjoin??
+			atletas.add(a);
+		}
+		resultSet.close();
+		statement.close();
+		return atletas;
 	}
 }

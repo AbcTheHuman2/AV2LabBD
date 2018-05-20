@@ -4,7 +4,7 @@ public class Prova
 {
 	private int id;
 	private String nome;
-	private boolean masculino;
+	private boolean sexo;
 	
 	public int getId()
 	{
@@ -28,11 +28,11 @@ public class Prova
 	
 	public boolean isMasculino()
 	{
-		return masculino;
+		return sexo;
 	}
 	
-	public void setMasculino(boolean masculino)
+	public void setSexo(boolean sexo)
 	{
-		this.masculino = masculino;
+		this.sexo = sexo;
 	}
 }
