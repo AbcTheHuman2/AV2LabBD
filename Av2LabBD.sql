@@ -42,6 +42,7 @@ CREATE TABLE Atleta_Bateria (
 	desempenho_4 numeric(9),
 	desempenho_5 numeric(9),
 	desempenho_6 numeric(9),
+	melhor_desempenho numeric(9),
 	primary key (atleta_codigo, bateria_id),
 	foreign key (atleta_codigo) references Atleta(codigo),
 	foreign key (bateria_id) references Bateria(id)
@@ -57,13 +58,12 @@ CREATE TABLE Recorde (
 )
 GO
 
---Arrumar
-CREATE TRIGGER t_compararDesempenho
+CREATE TRIGGER t_melhorDesempenho
 ON Atleta_Bateria
 FOR INSERT
 AS
 BEGIN
-    declare @desempenho_maior numeric(9) = 0,
+    declare @melhor_desempenho numeric(9) = 0,
             @des_1 numeric(9),
             @des_2 numeric(9),
             @des_3 numeric(9),
@@ -78,32 +78,22 @@ BEGIN
     set @des_5 = (select desempenho_5 from inserted)
     set @des_6 = (select desempenho_6 from inserted)
 
-    if (@des_1 > @desempenho_maior)
-    begin
-        set @desempenho_maior = @des_1
-    end
-    if (@des_2 > @desempenho_maior)
-    begin
-        set @desempenho_maior = @des_2
-    end
-    if (@des_3 > @desempenho_maior)
-    begin
-        set @desempenho_maior = @des_3
-    end
-    if (@des_4 > @desempenho_maior)
-    begin
-        set @desempenho_maior = @des_4
-    end
-    if (@des_5 > @desempenho_maior)
-    begin
-        set @desempenho_maior = @des_5
-    end
-    if (@des_6 > @desempenho_maior)
-    begin
-        set @desempenho_maior = @des_6
-    END
+    set @melhor_desempenho = @des_1
 
+    if (@des_2 > @melhor_desempenho)
+        set @melhor_desempenho = @des_2
+    if (@des_3 > @melhor_desempenho)
+        set @melhor_desempenho = @des_3
+    if (@des_4 > @melhor_desempenho)
+        set @melhor_desempenho = @des_4
+    if (@des_5 > @melhor_desempenho)
+        set @melhor_desempenho = @des_5
+    if (@des_6 > @melhor_desempenho)
+        set @melhor_desempenho = @des_6
 
+    UPDATE Atleta_Bateria
+    SET melhor_desempenho = @melhor_desempenho
+    WHERE (atleta_codigo = (SELECT atleta_codigo FROM INSERTED) AND bateria_id = (SELECT bateria_id FROM INSERTED))
 END
 GO
 
@@ -125,16 +115,14 @@ BEGIN
 END
 GO
 
-CREATE TRIGGER t_inserirDesempenho
+CREATE FUNCTION fn_inserirDesempenho
 ON Atleta_Bateria
 FOR INSERT
 AS
 BEGIN
-	--Uma bateria suporta até 8 atletas, ao inserir um desempenho precisamos verificar se a bateria já possui 8,
-	--caso sim, o id da bateria incrementa aqui... como?
 	declare @atleta_codigo int,
 			@bateria_id int
-	set @atleta_codigo = (select atleta_codigo from Atleta_Bateria where bateria_id = )
+	set @atleta_codigo = (select atleta_codigo from Atleta_Bateria)
 	set @bateria_id = (select id from Bateria)
 	if (COUNT(@atleta_codigo) = 8)
 	begin
@@ -144,7 +132,7 @@ BEGIN
 END
 GO
 
-CREATE FUNCTION fn_resultadosProva(@prova_codigo int)
+CREATE FUNCTION fn_resultadosProva(@prova_id int)
 RETURNS
 @prova_resultados TABLE(
     atleta_nome varchar(255),
@@ -154,12 +142,14 @@ RETURNS
 AS
 BEGIN
     INSERT INTO @prova_resultados
-    (SELECT Atleta.nome as 'Nome do Atleta', Pais.nome as 'País de Origem', Atleta_Bateria.desempenho as 'Desempenho'
-		FROM Pais
-		INNER JOIN Atleta ON Pais.codigo = Atleta.pais_codigo
-		INNER JOIN Atleta_Bateria ON Atleta.codigo = Atleta_Bateria.atleta_codigo
-	)
-	return
+    SELECT Atleta.nome as 'Nome do Atleta', Pais.nome as 'País de Origem', Atleta_Bateria.desempenho as 'Desempenho'
+        FROM Pais
+        INNER JOIN Atleta ON Pais.codigo = Atleta.pais_codigo
+        INNER JOIN Atleta_Bateria ON Atleta.codigo = Atleta_Bateria.atleta_codigo
+        INNER JOIN Bateria ON Atleta_Bateria.bateria_id = Bateria.id
+        INNER JOIN Prova ON Bateria.prova_id = @prova_id
+
+    RETURN
 END
 GO
 
